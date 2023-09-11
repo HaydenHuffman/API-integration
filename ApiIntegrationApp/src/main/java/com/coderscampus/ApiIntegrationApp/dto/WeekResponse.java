@@ -1,28 +1,19 @@
 package com.coderscampus.ApiIntegrationApp.dto;
 
+import java.util.Map;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class WeekResponse {
-	@JsonProperty
-	private Meals meals;
 	
-	@JsonProperty
-	private Nutrients nutrients;
+	@JsonProperty("week")
+	private Map<String, DayResponse> days;
 
-	public Meals getMeals() {
-		return meals;
+	public Map<String, DayResponse> getDays() {
+		return days;
 	}
 
-	public void setMeals(Meals meals) {
-		this.meals = meals;
+	public void setDays(Map<String, DayResponse> days) {
+		this.days = days;
 	}
-
-	public Nutrients getNutrients() {
-		return nutrients;
-	}
-
-	public void setNutrients(Nutrients nutrients) {
-		this.nutrients = nutrients;
-	}
-	
 }

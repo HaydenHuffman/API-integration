@@ -1,6 +1,7 @@
 package com.coderscampus.ApiIntegrationApp.web;
 
 import java.net.URI;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -22,17 +23,21 @@ public class ApiController {
 	private String mealPlannerUrl;
 	
 	@GetMapping("mealplanner/week")
-	public ResponseEntity<WeekResponse> getWeekMeals(String numCalories, String diet, String exclusions) {
+	public ResponseEntity<WeekResponse> getWeekMeals(Optional<String> numCalories, Optional<String> diet, Optional<String> exclusions) {
 		RestTemplate rt = new RestTemplate();	
 		
-		URI uri = UriComponentsBuilder.fromHttpUrl(baseUrl + mealPlannerUrl)
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(baseUrl + mealPlannerUrl)
 									  .queryParam("apiKey", "db301bc313c34110908f5971652555b9")
-									  .queryParam("timeFrame", "week")
-									  .queryParam("targetCalories", numCalories)
-									  .queryParam("diet", diet)
-									  .queryParam("exclude", exclusions)
-									  .build()
-									  .toUri();
+									  .queryParam("timeFrame", "week");
+		
+		
+		numCalories.ifPresent(value -> builder.queryParam("targetCalories", value));
+		diet.ifPresent(value -> builder.queryParam("diet", value));
+		exclusions.ifPresent(value -> builder.queryParam("exclude", value));
+
+		URI uri = builder.build().toUri();
+
+		
 		ResponseEntity<WeekResponse> response = rt.getForEntity(uri, WeekResponse.class);
 		return response;
 		
@@ -40,17 +45,20 @@ public class ApiController {
 	
 	@GetMapping("mealplanner/day")
 	
-	public ResponseEntity<DayResponse> getDayMeals(String numCalories, String diet, String exclusions) {
+	public ResponseEntity<DayResponse> getDayMeals(Optional<String> numCalories, Optional<String> diet, Optional<String> exclusions) {
 		RestTemplate rt = new RestTemplate();	
 		
-		URI uri = UriComponentsBuilder.fromHttpUrl(baseUrl + mealPlannerUrl)
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(baseUrl + mealPlannerUrl)
 								      .queryParam("apiKey", "db301bc313c34110908f5971652555b9")
-									  .queryParam("timeFrame", "day")
-									  .queryParam("targetCalories", numCalories)
-									  .queryParam("diet", diet)
-									  .queryParam("exclude", exclusions)
-									  .build()
-									  .toUri();
+									  .queryParam("timeFrame", "day");
+
+										
+						numCalories.ifPresent(value -> builder.queryParam("targetCalories", value));
+						diet.ifPresent(value -> builder.queryParam("diet", value));
+						exclusions.ifPresent(value -> builder.queryParam("exclude", value));
+
+						URI uri = builder.build().toUri();
+
 		ResponseEntity<DayResponse> response = rt.getForEntity(uri, DayResponse.class);
 		return response;
 		
